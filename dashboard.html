@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+    <header class="topbar">
+        <h2>Dashboard</h2>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <main class="content">
+        <div class="card">
+            <h3>Welcome, Admin!</h3>
+            <p>You have successfully logged in.</p>
+        </div>
+    </main>
+
+<script>
+    function logout() {
+        window.location.href = "login.html";
+    }
+</script>
+
+<script type="module">
+  // Firebase import CDN
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } 
+        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  // Your Firebase Config — REPLACE with your own values from Firebase Console
+  const firebaseConfig = {
+  apiKey: "AIzaSyCc2aKOVyozIR4SCN-ePbOI7bxI_sxqKF0",
+  authDomain: "teamdaykie.firebaseapp.com",
+  projectId: "teamdaykie",
+  storageBucket: "teamdaykie.firebasestorage.app",
+  messagingSenderId: "1063892043301",
+  appId: "1:1063892043301:web:1c03898048b20808b0e1cc",
+  measurementId: "G-473QQK8877"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  window.auth = auth;
+  window.db = db;
+  window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+  window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+  window.doc = doc;
+  window.setDoc = setDoc;
+</script>
+
+
+</body>
+</html>

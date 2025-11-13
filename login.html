@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Login</title>
+    <link rel="stylesheet" href="css/login.css" />
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Welcome</h2>
+            <p>Please log in to continue</p>
+
+            <form onsubmit="return loginUser(event)">
+                
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="Enter your email">
+
+                <label>Password</label>
+                <input type="password" id="password" required placeholder="Enter your password">
+
+                <button type="submit" class="btn">Login</button>
+            </form>
+
+            <p class="link">Don't have an account? <a href="signup.html">Sign up</a></p>
+        </div>
+    </div>
+
+<script type="module">
+    import { auth } from "./firebase.js";
+    import { signInWithEmailAndPassword } 
+        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    async function loginUser(e) {
+        e.preventDefault();
+
+        let email = document.getElementById("email").value;
+        let password = document.getElementById("password").value;
+
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.href = "dashboard.html";
+        } 
+        catch (error) {
+            alert("Incorrect email or password.");
+            console.log(error);
+        }
+    }
+
+    window.loginUser = loginUser;
+</script>
+
+</body>
+</html>
