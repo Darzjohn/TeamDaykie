@@ -8,49 +8,66 @@
 </head>
 <body>
 
-    <div class="signup-container">
-        <div class="signup-card">
-            <h2>Create Account</h2>
+<div class="signup-container">
+    <div class="signup-card">
+        <h2>Create Account</h2>
 
-            <form onsubmit="return registerUser(event)">
-                
-                <label>Email</label>
-                <input type="email" id="email" required placeholder="Enter email">
+        <form onsubmit="return registerUser(event)">
+            <label>Email</label>
+            <input type="email" id="email" required placeholder="Enter email">
 
-                <label>Password</label>
-                <input type="password" id="password" required placeholder="Enter password">
+            <label>Password</label>
+            <input type="password" id="password" required placeholder="Enter password">
 
-                <button type="submit" class="btn">Sign Up</button>
-            </form>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
 
-            <p class="link">Already have an account? <a href="login.html">Login</a></p>
-        </div>
+        <p class="link">
+            Already have an account? 
+            <a href="login.html">Login</a>
+        </p>
     </div>
+</div>
+
+<!-- EmailJS SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    emailjs.init("yNq66TICQ0oH9auXD");  <!-- your public key -->
+</script>
 
 <script type="module">
-  import { auth } from "./firebase.js";
-  import { createUserWithEmailAndPassword }
-      from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { auth } from "./firebase.js";
+import { createUserWithEmailAndPassword, sendEmailVerification }
+from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-  async function registerUser(e) {
+async function registerUser(e) {
     e.preventDefault();
 
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+        // Create account in Firebase
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
 
-      alert("Account created successfully!");
-      window.location.href = "login.html";
+        // Send Firebase verification email
+        await sendEmailVerification(userCred.user);
+
+        // Send welcome email using EmailJS
+        emailjs.send("service_drwa0hf", "template_6r8vr5l", {
+            to_email: email
+        });
+
+        alert("Account created! Check your email to verify your account.");
+        window.location.href = "login.html";
 
     } catch (error) {
-      alert(error.message);
-      console.log(error);
+        alert(error.message);
+        console.log(error);
     }
-  }
+}
 
-  window.registerUser = registerUser;
+window.registerUser = registerUser;
 </script>
 
 </body>
