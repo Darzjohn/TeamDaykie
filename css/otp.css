@@ -72,3 +72,45 @@ button:hover {
     background: #28a745;
     color: white;
 }
+/* UNIVERSAL MOBILE RESPONSIVE FIX */
+@media (max-width: 480px) {
+
+    body {
+        padding: 15px;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .login-card,
+    .signup-card,
+    .otp-container,
+    .card {
+        padding: 20px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+    }
+
+    input,
+    button {
+        font-size: 15px !important;
+        padding: 10px !important;
+    }
+
+    h2 {
+        font-size: 20px !important;
+    }
+
+    p {
+        font-size: 13px !important;
+    }
+
+    /* add */
+    input {
+        letter-spacing: 2px !important;
+        font-size: 18px !important;
+    }
+
+    .resend-btn {
+        width: 100% !important;
+    }
+}
