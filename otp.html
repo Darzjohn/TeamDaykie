@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify OTP</title>
+</head>
+<body>
+
+<h2>Enter OTP</h2>
+<p>We sent a verification code to your email.</p>
+
+<input type="text" id="otpInput" placeholder="Enter 6-digit code">
+<button onclick="verifyOtp()">Verify</button>
+
+<script>
+    // Read saved OTP from local storage
+    const savedOtp = localStorage.getItem("verificationOtp");
+    const email = localStorage.getItem("pendingEmail");
+
+    function verifyOtp() {
+        const userOtp = document.getElementById("otpInput").value;
+
+        if (userOtp === savedOtp) {
+            alert("Email Verified Successfully!");
+            localStorage.removeItem("verificationOtp");
+
+            window.location.href = "login.html";
+        } else {
+            alert("Incorrect OTP. Try again.");
+        }
+    }
+</script>
+
+</body>
+</html>

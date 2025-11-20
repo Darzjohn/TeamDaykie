@@ -19,6 +19,18 @@
             <label>Password</label>
             <input type="password" id="password" required placeholder="Enter password">
 
+            <!-- Password strength section -->
+            <div id="password-strength" style="font-size: 13px; margin-top: 5px;">
+                <p id="len">❌ At least 8 characters</p>
+                <p id="upper">❌ At least 1 uppercase letter</p>
+                <p id="lower">❌ At least 1 lowercase letter</p>
+                <p id="num">❌ At least 1 number</p>
+                <!-- REMOVED special character rule -->
+            </div>
+
+            <label>Confirm Password</label>
+            <input type="password" id="confirmPassword" required placeholder="Confirm password">
+
             <button type="submit" class="btn">Sign Up</button>
         </form>
 
@@ -32,38 +44,106 @@
 <!-- EmailJS SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-    emailjs.init("yNq66TICQ0oH9auXD");  <!-- your public key -->
+    emailjs.init("yNq66TICQ0oH9auXD"); 
 </script>
+
+<!-- SWEETALERT2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script type="module">
 import { auth } from "./firebase.js";
-import { createUserWithEmailAndPassword, sendEmailVerification }
+import { createUserWithEmailAndPassword }
 from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+const passwordInput = document.getElementById("password");
+
+// Strength check elements
+const len = document.getElementById("len");
+const upper = document.getElementById("upper");
+const lower = document.getElementById("lower");
+const num = document.getElementById("num");
+
+// Live strength checker
+passwordInput.addEventListener("input", () => {
+    const value = passwordInput.value;
+
+    len.textContent = value.length >= 8 ? "✅ At least 8 characters" : "❌ At least 8 characters";
+    upper.textContent = /[A-Z]/.test(value) ? "✅ At least 1 uppercase letter" : "❌ At least 1 uppercase letter";
+    lower.textContent = /[a-z]/.test(value) ? "✅ At least 1 lowercase letter" : "❌ At least 1 lowercase letter";
+    num.textContent = /[0-9]/.test(value) ? "✅ At least 1 number" : "❌ At least 1 number";
+});
 
 async function registerUser(e) {
     e.preventDefault();
 
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
+    let confirmPassword = document.getElementById("confirmPassword").value;
+
+    // Password match check
+    if (password !== confirmPassword) {
+        Swal.fire({
+            icon: "error",
+            title: "Password Error",
+            text: "Passwords do not match!",
+            confirmButtonColor: "#d33"
+        });
+        return false;
+    }
+
+    // Password rule checks
+    if (password.length < 8 || 
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password)) 
+    {
+        Swal.fire({
+            icon: "warning",
+            title: "Weak Password",
+            text: "Password must include uppercase, lowercase, number, and be at least 8 characters.",
+            confirmButtonColor: "#f1c40f"
+        });
+        return false;
+    }
 
     try {
-        // Create account in Firebase
-        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        // Create user
+        await createUserWithEmailAndPassword(auth, email, password);
 
-        // Send Firebase verification email
-        await sendEmailVerification(userCred.user);
+        // OTP
+        let otp = Math.floor(100000 + Math.random() * 900000);
 
-        // Send welcome email using EmailJS
+        localStorage.setItem("verificationOtp", otp);
+        localStorage.setItem("pendingEmail", email);
+
+        // Send OTP
         emailjs.send("service_drwa0hf", "template_6r8vr5l", {
-            to_email: email
+            to_email: email,
+            otp_code: otp,
+            isOtp: "true"
         });
 
-        alert("Account created! Check your email to verify your account.");
-        window.location.href = "login.html";
+        // Success sweet alert
+        Swal.fire({
+            icon: "success",
+            title: "Account Created!",
+            html: `
+                <strong>We sent a verification code (OTP) to your Gmail.</strong><br><br>
+                Please check your inbox or spam folder to complete your registration.
+            `,
+            confirmButtonText: "Go to Verification",
+            confirmButtonColor: "#28a745"
+        }).then(() => {
+            window.location.href = "otp.html";
+        });
 
     } catch (error) {
-        alert(error.message);
-        console.log(error);
+        Swal.fire({
+            icon: "error",
+            title: "Signup Failed",
+            text: error.message,
+            confirmButtonColor: "#d33"
+        });
     }
 }
 

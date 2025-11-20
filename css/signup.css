@@ -1,3 +1,4 @@
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -5,24 +6,46 @@
     font-family: Arial, sans-serif;
 }
 
+/* FIX PAGE JUMP WHEN SWEETALERT OPENS */
+html.swal2-shown,
+body.swal2-shown {
+    overflow-y: hidden !important;
+    padding-right: 0 !important;  /* prevents SweetAlert layout shift */
+}
+
+/* MAIN LAYOUT */
 body {
     background: #f0f2f5;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* CENTER horizontally only */
     align-items: center;
-    height: 100vh;
+    height: auto; 
+    min-height: 100vh; /* keeps page full height */
+    padding-top: 60px; /* manually center vertically */
+    padding-bottom: 60px;
 }
 
+
+/* CONTAINER */
 .signup-container {
     width: 100%;
     max-width: 380px;
+
+    /* Prevent SweetAlert from pushing it upward */
+    position: relative;
+    top: 0;
 }
 
+/* CARD */
 .signup-card {
     background: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+    /* Make sure the card stays centered */
+    position: relative;
+    z-index: 10;
 }
 
 h2 {
@@ -30,12 +53,14 @@ h2 {
     margin-bottom: 20px;
 }
 
+/* LABELS */
 label {
     font-size: 14px;
     display: block;
     margin-bottom: 5px;
 }
 
+/* INPUTS */
 input {
     width: 100%;
     padding: 10px;
@@ -44,6 +69,7 @@ input {
     margin-bottom: 15px;
 }
 
+/* BUTTON */
 .btn {
     width: 100%;
     padding: 10px;
@@ -58,6 +84,7 @@ input {
     background: #228b3c;
 }
 
+/* LOGIN LINK */
 .link {
     text-align: center;
     margin-top: 10px;
