@@ -1,32 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Verify OTP</title>
+ <link rel="stylesheet" href="css/otp.css">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-<h2>Enter OTP</h2>
-<p>We sent a verification code to your email.</p>
+<div class="otp-container">
+    <h2>Verify OTP</h2>
+    <p>We sent a 6-digit verification code to your email.</p>
 
-<input type="text" id="otpInput" placeholder="Enter 6-digit code">
-<button onclick="verifyOtp()">Verify</button>
+    <input type="text" id="otpInput" maxlength="6" placeholder="• • • • • •">
+
+    <button onclick="verifyOtp()">Verify</button>
+    <button class="resend-btn" onclick="resendOtp()">Resend OTP</button>
+</div>
 
 <script>
-    // Read saved OTP from local storage
     const savedOtp = localStorage.getItem("verificationOtp");
     const email = localStorage.getItem("pendingEmail");
 
     function verifyOtp() {
-        const userOtp = document.getElementById("otpInput").value;
+        const userOtp = document.getElementById("otpInput").value.trim();
+
+        if (userOtp.length !== 6) {
+            Swal.fire({
+                icon: "warning",
+                title: "Invalid OTP",
+                text: "Please enter a valid 6-digit code.",
+            });
+            return;
+        }
 
         if (userOtp === savedOtp) {
-            alert("Email Verified Successfully!");
-            localStorage.removeItem("verificationOtp");
-
-            window.location.href = "login.html";
+            Swal.fire({
+                icon: "success",
+                title: "Email Verified!",
+                text: "Your account is now verified.",
+                confirmButtonColor: "#28a745"
+            }).then(() => {
+                localStorage.removeItem("verificationOtp");
+                window.location.href = "login.html";
+            });
         } else {
-            alert("Incorrect OTP. Try again.");
+            Swal.fire({
+                icon: "error",
+                title: "Incorrect OTP",
+                text: "The code you entered is incorrect. Try again.",
+            });
         }
+    }
+
+    function resendOtp() {
+        Swal.fire({
+            icon: "info",
+            title: "OTP Sent Again",
+            text: "Please check your email for the new code.",
+        });
     }
 </script>
 
