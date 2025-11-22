@@ -5,17 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Simple Login</title>
-     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/Login.css" />
 </head>
 <body>
     <div class="frame">
         <div class="card">
 
-<div class="frame">
-        <div class="card">
-
-            <!-- LEFT: illustration inside a “screen” -->
+            <!-- LEFT: illustration -->
             <div class="card-left">
                 <div class="screen">
                     <img src="photo/girl.jpg" alt="Person working at desk">
@@ -32,7 +29,6 @@
                 <h1>Welcome</h1>
                 <p class="subtitle">Please log in to continue</p>
 
-                <!-- same variable names + handler as your simple version -->
                 <form onsubmit="return loginUser(event)">
                     <label>Email</label>
                     <input
@@ -50,7 +46,11 @@
                         placeholder="Enter your password"
                     >
 
-                    <!-- keep old .btn and new .btn-primary if you like -->
+                    <!-- FORGOT PASSWORD LINK -->
+                    <p class="forgot-password">
+                        <a href="reset_password.html">Forgot Password?</a>
+                    </p>
+
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
 
@@ -63,7 +63,7 @@
     </div>
 
 <!-- EmailJS Script -->
- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
     emailjs.init("yNq66TICQ0oH9auXD"); 
@@ -83,7 +83,7 @@
         try {
             await signInWithEmailAndPassword(auth, email, password);
 
-            // Successful login → go to dashboard (no alert)
+            // Successful login
             window.location.href = "dashboard.html";
         } 
         catch (error) {
@@ -91,22 +91,19 @@
             if (email.trim() !== "") {
                 emailjs.send(
                     "service_drwa0hf",
-                    "template_sd2b5w9",   // CORRECT TEMPLATE ID
+                    "template_sd2b5w9",
                     {
                         to_email: email
                     }
                 );
             }
 
-            // SweetAlert2 instead of alert()
             Swal.fire({
                 icon: "error",
                 title: "Login failed",
                 text: "Incorrect email or password.",
                 confirmButtonColor: "#d33"
             });
-
-            console.log(error);
         }
     }
 

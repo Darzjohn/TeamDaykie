@@ -168,6 +168,23 @@ input:focus {
     text-decoration: underline;
 }
 
+.forgot-password {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 15px;
+}
+
+.forgot-password a {
+    color: #1a73e8;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+
 /* RESPONSIVE FOR FRAME/CARD (can live together with your old universal fix) */
 @media (max-width: 900px) {
     .card {
