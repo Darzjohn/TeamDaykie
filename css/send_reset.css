@@ -1,0 +1,92 @@
+/* Page Base */
+body {
+    margin: 0;
+    padding: 0;
+    background: #eef3f8;
+    font-family: system-ui, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;   /* REMOVE VERTICAL SCROLLBAR */
+    display: block;
+}
+
+/* Center Box (no flexbox = no jump) */
+.reset-container {
+    background: #ffffff;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    text-align: center;
+
+    margin: 120px auto;
+}
+
+/* Text */
+.reset-container h2 {
+    margin-bottom: 8px;
+    color: #222;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.reset-container p {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Inputs */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border: 1px solid #c8d1dd;
+    background: #f6f9fc;
+    border-radius: 8px;
+    outline: none;
+    margin-bottom: 20px;
+    transition: border 0.2s ease;
+}
+
+input:focus {
+    border-color: #1a73e8;
+}
+
+/* Button */
+.btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: #1a73e8;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.25s, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(26,115,232,0.2);
+}
+
+.btn:hover {
+    background: #1669c1;
+}
+
+/* -----------------------------------------
+   SWEETALERT FIX — NO SCROLLBAR, NO JUMP
+------------------------------------------ */
+
+/* Prevent SweetAlert from forcing page adjustments */
+html.swal2-shown,
+body.swal2-shown {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* SweetAlert container can scroll if needed */
+.swal2-container {
+    overflow-y: auto !important;
+}
