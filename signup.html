@@ -4,42 +4,81 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/signup.css" />
 </head>
 <body>
 
-<div class="signup-container">
-    <div class="signup-card">
-        <h2>Create Account</h2>
-        
-        <form onsubmit="return registerUser(event)">
-            <label>Email</label>
-            <input type="email" id="email" required placeholder="Enter email">
+   <div class="frame">
+        <div class="card">
 
-            <label>Password</label>
-            <input type="password" id="password" required placeholder="Enter password">
-
-
-            <div id="password-strength" style="font-size: 13px; margin-top: 5px;">
-                <p id="len">❌ At least 8 characters</p>
-                <p id="upper">❌ At least 1 uppercase letter</p>
-                <p id="lower">❌ At least 1 lowercase letter</p>
-                <p id="num">❌ At least 1 number</p>
-                <!-- REMOVED special character rule -->
+            <!-- LEFT IMAGE (same as login page) -->
+            <div class="card-left">
+                <div class="screen">
+                    <img src="photo/girl.jpg" alt="Signup Illustration">
+                </div>
             </div>
 
-            <label>Confirm Password</label>
-            <input type="password" id="confirmPassword" required placeholder="Confirm password">
+            <!-- RIGHT FORM -->
+            <div class="card-right">
+                <div class="brand">
+                    <div class="brand-icon"></div>
+                    <span class="brand-name">Mga Kupal</span>
+                </div>
 
-            <button type="submit" class="btn">Sign Up</button>
-        </form>
+                <h1>Create Account</h1>
+                <p class="subtitle">Please fill in the details</p>
 
-        <p class="link">
-            Already have an account? 
-            <a href="login.html">Login</a>
-        </p>
+                <form onsubmit="return registerUser(event)">
+
+                    <!-- EMAIL -->
+                    <label>Email</label>
+                    <input 
+                        type="email"
+                        id="email" 
+                        required 
+                        placeholder="Enter email"
+                    >
+
+                    <!-- PASSWORD -->
+                    <label>Password</label>
+                    <input 
+                        type="password"
+                        id="password" 
+                        required 
+                        placeholder="Enter password"
+                    >
+
+                    <!-- PASSWORD STRENGTH (IDs MATCH SCRIPT EXACTLY) -->
+                    <div id="password-strength" class="password-rules">
+                        <p id="len">❌ At least 8 characters</p>
+                        <p id="upper">❌ At least 1 uppercase letter</p>
+                        <p id="lower">❌ At least 1 lowercase letter</p>
+                        <p id="num">❌ At least 1 number</p>
+                    </div>
+
+                    <!-- CONFIRM PASSWORD -->
+                    <label>Confirm Password</label>
+                    <input 
+                        type="password"
+                        id="confirmPassword"
+                        required
+                        placeholder="Confirm password"
+                    >
+
+                    <!-- BUTTON -->
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+
+                <p class="login-link">
+                    Already have an account? <a href="login.html">Login</a>
+                </p>
+            </div>
+
+        </div>
     </div>
-</div>
+
 
 <!-- EmailJS SCRIPT -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
