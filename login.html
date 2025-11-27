@@ -67,11 +67,12 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
     emailjs.init("yNq66TICQ0oH9auXD");
-</script>
-<script type="module">
+</script><script type="module">
     import { auth } from "./firebase.js";
-    import { signInWithEmailAndPassword } 
-        from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+        signInWithEmailAndPassword,
+        sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     let failedAttempts = 0;
 
@@ -84,7 +85,7 @@
         try {
             await signInWithEmailAndPassword(auth, email, password);
 
-            failedAttempts = 0;
+            failedAttempts = 0; // reset counter
             window.location.href = "dashboard.html";
         } 
         catch (error) {
@@ -93,28 +94,31 @@
 
             console.log("Failed attempts:", failedAttempts);
 
-            // 🔥 3rd FAILED ATTEMPT
+            // 🔥 On 3rd FAILED ATTEMPT → Send Firebase Reset Email
             if (failedAttempts === 3 && email.trim() !== "") {
 
-                // Send Email
-                emailjs.send(
-                    "service_drwa0hf",
-                    "template_sd2b5w9",
-                    { to_email: email }
-                );
+                try {
+                    await sendPasswordResetEmail(auth, email);
 
-                // SweetAlert for the 3rd attempt
-                Swal.fire({
-                    icon: "warning",
-                    title: "3 Failed Login Attempts",
-                    text: "If you forget your password, you can check your email to change your password.",
-                    confirmButtonColor: "#3085d6"
-                });
+                    Swal.fire({
+                        icon: "warning",
+                        title: "3 Failed Login Attempts",
+                        html: `We sent a password reset link to:<br><b>${email}</b>`,
+                        confirmButtonColor: "#3085d6"
+                    });
 
-                return; // 🔴 Stop here so the normal alert will NOT show
+                } catch (err) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Could not send password reset email."
+                    });
+                }
+
+                return; // stop here so no normal alert shows
             }
 
-            // Normal error popup (for attempts 1 and 2)
+            // Normal error popup (for 1st and 2nd attempt)
             Swal.fire({
                 icon: "error",
                 title: "Login failed",
@@ -126,6 +130,7 @@
 
     window.loginUser = loginUser;
 </script>
+
 
 </body>
 </html>
