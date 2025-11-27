@@ -1,92 +1,128 @@
-/* Page Base */
+/* PAGE BACKGROUND */
 body {
     margin: 0;
     padding: 0;
-    background: #eef3f8;
+    background: #f2f5f9;
     font-family: system-ui, sans-serif;
+
+    display: block;
     min-height: 100vh;
     overflow-x: hidden;
-    overflow-y: hidden;   /* REMOVE VERTICAL SCROLLBAR */
-    display: block;
 }
 
-/* Center Box (no flexbox = no jump) */
+/* MAIN CONTAINER */
 .reset-container {
     background: #ffffff;
-    padding: 30px;
-    width: 100%;
-    max-width: 400px;
-    border-radius: 14px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+    width: 90%;
+    max-width: 420px;
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
     text-align: center;
 
-    margin: 120px auto;
+    margin: 80px auto;
 }
 
-/* Text */
-.reset-container h2 {
-    margin-bottom: 8px;
-    color: #222;
+/* TITLE */
+h2 {
     font-size: 24px;
-    font-weight: 600;
+    color: #222;
+    margin-bottom: 10px;
 }
 
-.reset-container p {
-    margin-bottom: 20px;
-    font-size: 14px;
+/* SUBTEXT */
+p {
     color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
 }
 
-/* Inputs */
-input[type="email"],
-input[type="password"] {
+/* INPUTS */
+input {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     font-size: 15px;
-    border: 1px solid #c8d1dd;
-    background: #f6f9fc;
+    border: 1px solid #ccd2d8;
     border-radius: 8px;
     outline: none;
-    margin-bottom: 20px;
-    transition: border 0.2s ease;
+    margin-bottom: 15px;
 }
 
 input:focus {
     border-color: #1a73e8;
 }
 
-/* Button */
+/* BUTTON */
 .btn {
     width: 100%;
-    padding: 12px;
-    font-size: 16px;
+    padding: 14px;
     background: #1a73e8;
     border: none;
     color: white;
+    font-size: 16px;
+    font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
-    transition: background 0.25s, transform 0.2s ease;
-    box-shadow: 0 4px 12px rgba(26,115,232,0.2);
+    transition: 0.2s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
 .btn:hover {
     background: #1669c1;
 }
 
-/* -----------------------------------------
-   SWEETALERT FIX — NO SCROLLBAR, NO JUMP
------------------------------------------- */
+/* ===============================
+   🔥 RESPONSIVE DESIGN
+   =============================== */
 
-/* Prevent SweetAlert from forcing page adjustments */
-html.swal2-shown,
-body.swal2-shown {
-    overflow: hidden !important;
-    padding-right: 0 !important;
-    margin-right: 0 !important;
+/* Extra Small Phones (< 360px) */
+@media (max-width: 360px) {
+    .reset-container {
+        width: 92%;
+        padding: 25px 18px;
+        margin: 40px auto;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input,
+    .btn {
+        padding: 12px;
+        font-size: 14px;
+    }
 }
 
-/* SweetAlert container can scroll if needed */
-.swal2-container {
-    overflow-y: auto !important;
+/* Small phones (360px–390px) */
+@media (max-width: 390px) {
+    .reset-container {
+        margin: 50px auto;
+    }
+}
+
+/* Medium phones (390px–430px) */
+@media (max-width: 430px) {
+    .reset-container {
+        width: 90%;
+        margin: 60px auto;
+    }
+}
+
+/* Tablets */
+@media (min-width: 600px) and (max-width: 900px) {
+    .reset-container {
+        max-width: 450px;
+        margin-top: 100px;
+        padding: 40px;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    input, .btn {
+        font-size: 16px;
+        padding: 16px;
+    }
 }
