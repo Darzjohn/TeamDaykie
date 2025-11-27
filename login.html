@@ -68,11 +68,12 @@
 <script>
     emailjs.init("yNq66TICQ0oH9auXD");
 </script>
-
 <script type="module">
     import { auth } from "./firebase.js";
     import { signInWithEmailAndPassword } 
         from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+    let failedAttempts = 0;
 
     async function loginUser(e) {
         e.preventDefault();
@@ -83,21 +84,37 @@
         try {
             await signInWithEmailAndPassword(auth, email, password);
 
-            // Successful login
+            failedAttempts = 0;
             window.location.href = "dashboard.html";
         } 
         catch (error) {
-            // SEND FAILED LOGIN EMAIL
-            if (email.trim() !== "") {
+
+            failedAttempts++;
+
+            console.log("Failed attempts:", failedAttempts);
+
+            // 🔥 3rd FAILED ATTEMPT
+            if (failedAttempts === 3 && email.trim() !== "") {
+
+                // Send Email
                 emailjs.send(
                     "service_drwa0hf",
                     "template_sd2b5w9",
-                    {
-                        to_email: email
-                    }
+                    { to_email: email }
                 );
+
+                // SweetAlert for the 3rd attempt
+                Swal.fire({
+                    icon: "warning",
+                    title: "3 Failed Login Attempts",
+                    text: "If you forget your password, you can check your email to change your password.",
+                    confirmButtonColor: "#3085d6"
+                });
+
+                return; // 🔴 Stop here so the normal alert will NOT show
             }
 
+            // Normal error popup (for attempts 1 and 2)
             Swal.fire({
                 icon: "error",
                 title: "Login failed",
