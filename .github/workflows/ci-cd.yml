@@ -1,0 +1,75 @@
+name: CI/CD Pipeline (Static HTML + JS)
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # ---- 1. CHECKOUT CODE ----
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ---- 2. VALIDATE HTML ----
+      - name: Validate HTML
+        uses: Cyb3r-Jak3/html5validator-action@v1.1
+        continue-on-error: true  # avoids pipeline failure due to minor warnings
+
+      # ---- 3. VALIDATE CSS ----
+      - name: Validate CSS
+        uses: stylelint/stylelint-action@v1
+        with:
+          files: "**/*.css"
+        continue-on-error: true
+
+      # ---- 4. VALIDATE JS ----
+      - name: Run ESLint (Basic JS Linting)
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          eslint_flags: "**/*.js"
+        continue-on-error: true
+
+      # ---- 5. UPLOAD ARTIFACTS ----
+      - name: Upload site artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-site
+          path: |
+            ./*.html
+            ./css
+            ./photo
+            ./firebase.js
+            ./*.js
+
+  # ====== DEPLOY TO GITHUB PAGES ======
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Deploy static files to GH Pages
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+        
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4
