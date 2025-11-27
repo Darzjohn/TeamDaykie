@@ -88,11 +88,8 @@
 
 <!-- SWEETALERT2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script type="module">
 import { auth } from "./firebase.js";
-import { createUserWithEmailAndPassword }
-from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 const passwordInput = document.getElementById("password");
 
@@ -125,7 +122,6 @@ async function registerUser(e) {
             icon: "error",
             title: "Password Error",
             text: "Passwords do not match!",
-            confirmButtonColor: "#d33"
         });
         return false;
     }
@@ -140,50 +136,34 @@ async function registerUser(e) {
             icon: "warning",
             title: "Weak Password",
             text: "Password must include uppercase, lowercase, number, and be at least 8 characters.",
-            confirmButtonColor: "#f1c40f"
         });
         return false;
     }
 
-    try {
-        // Create user
-        await createUserWithEmailAndPassword(auth, email, password);
+    // Generate OTP
+    let otp = Math.floor(100000 + Math.random() * 900000);
 
-        // OTP
-        let otp = Math.floor(100000 + Math.random() * 900000);
+    // Store TEMPORARY user details
+    localStorage.setItem("pendingEmail", email);
+    localStorage.setItem("pendingPassword", password);
+    localStorage.setItem("verificationOtp", otp);
 
-        localStorage.setItem("verificationOtp", otp);
-        localStorage.setItem("pendingEmail", email);
+    // Send OTP email (IMPORTANT: send isOtp:true)
+    emailjs.send("service_drwa0hf", "template_6r8vr5l", {
+        to_email: email,
+        otp_code: otp,
+        isOtp: "true"
+    });
 
-        // Send OTP
-        emailjs.send("service_drwa0hf", "template_6r8vr5l", {
-            to_email: email,
-            otp_code: otp,
-            isOtp: "true"
-        });
-
-        // Success sweet alert
-        Swal.fire({
-            icon: "success",
-            title: "Account Created!",
-            html: `
-                <strong>We sent a verification code (OTP) to your Gmail.</strong><br><br>
-                Please check your inbox or spam folder to complete your registration.
-            `,
-            confirmButtonText: "Go to Verification",
-            confirmButtonColor: "#28a745"
-        }).then(() => {
-            window.location.href = "otp.html";
-        });
-
-    } catch (error) {
-        Swal.fire({
-            icon: "error",
-            title: "Signup Failed",
-            text: error.message,
-            confirmButtonColor: "#d33"
-        });
-    }
+    Swal.fire({
+        icon: "success",
+        title: "OTP Sent!",
+        html: `We sent a verification code to your email.<br>
+               Please check your inbox or spam folder.`,
+        confirmButtonText: "Go to Verification",
+    }).then(() => {
+        window.location.href = "otp.html";
+    });
 }
 
 window.registerUser = registerUser;

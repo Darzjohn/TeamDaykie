@@ -20,50 +20,99 @@
     <button onclick="verifyOtp()">Verify</button>
     <button class="resend-btn" onclick="resendOtp()">Resend OTP</button>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-    const savedOtp = localStorage.getItem("verificationOtp");
-    const email = localStorage.getItem("pendingEmail");
+    emailjs.init("yNq66TICQ0oH9auXD");
+</script>
 
-    function verifyOtp() {
-        const userOtp = document.getElementById("otpInput").value.trim();
+<script type="module">
+import { auth } from "./firebase.js";
+import { createUserWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        if (userOtp.length !== 6) {
-            Swal.fire({
-                icon: "warning",
-                title: "Invalid OTP",
-                text: "Please enter a valid 6-digit code.",
+const savedOtp = localStorage.getItem("verificationOtp");
+
+async function verifyOtp() {
+    const userOtp = document.getElementById("otpInput").value.trim();
+
+    if (userOtp.length !== 6) {
+        Swal.fire({
+            icon: "warning",
+            title: "Invalid OTP",
+            text: "Please enter a valid 6-digit code.",
+        });
+        return;
+    }
+
+    if (userOtp === savedOtp) {
+
+        const email = localStorage.getItem("pendingEmail");
+        const password = localStorage.getItem("pendingPassword");
+
+        try {
+            // CREATE FIREBASE ACCOUNT ONLY NOW ✔
+            await createUserWithEmailAndPassword(auth, email, password);
+
+            // OPTIONAL: send welcome email
+            emailjs.send("service_drwa0hf", "template_6r8vr5l", {
+                to_email: email,
+                isOtp: "false"
             });
-            return;
-        }
 
-        if (userOtp === savedOtp) {
+            // Clear temp data
+            localStorage.removeItem("verificationOtp");
+            localStorage.removeItem("pendingEmail");
+            localStorage.removeItem("pendingPassword");
+
             Swal.fire({
                 icon: "success",
                 title: "Email Verified!",
-                text: "Your account is now verified.",
-                confirmButtonColor: "#28a745"
+                text: "Your account is now created.",
             }).then(() => {
-                localStorage.removeItem("verificationOtp");
                 window.location.href = "login.html";
             });
-        } else {
+
+        } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Incorrect OTP",
-                text: "The code you entered is incorrect. Try again.",
+                title: "Account Error",
+                text: error.message,
             });
         }
-    }
 
-    function resendOtp() {
+    } else {
         Swal.fire({
-            icon: "info",
-            title: "OTP Sent Again",
-            text: "Please check your email for the new code.",
+            icon: "error",
+            title: "Incorrect OTP",
+            text: "The code you entered is incorrect.",
         });
     }
+}
+
+window.verifyOtp = verifyOtp;
+
+function resendOtp() {
+    const email = localStorage.getItem("pendingEmail");
+    const newOtp = Math.floor(100000 + Math.random() * 900000);
+
+    localStorage.setItem("verificationOtp", newOtp);
+
+    emailjs.send("service_drwa0hf", "template_6r8vr5l", {
+        to_email: email,
+        otp_code: newOtp,
+        isOtp: "true"
+    });
+
+    Swal.fire({
+        icon: "info",
+        title: "OTP Resent",
+        text: "A new OTP has been sent to your email.",
+    });
+}
+
+window.resendOtp = resendOtp;
 </script>
+
 
 </body>
 </html>
